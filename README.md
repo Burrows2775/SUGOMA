@@ -4,6 +4,12 @@
 
 ---
 
+## Projet hébergé sur l'internet
+
+[Jouer](https://sugoma.msluac.dev)
+
+---
+
 ## C'est quoi SUGOMA ?
 
 SUGOMA, c'est SUTOM, mais pour ceux qui veulent jouer à leur rythme.
