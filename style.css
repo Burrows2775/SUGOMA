@@ -90,6 +90,16 @@ keyboard table td.jaune {
     background-color: #ffbd00;
 }
 
+keyboard table td.grisee {
+    width: 36px;
+    background-color: #171717;
+    border: 0px solid rgba(43, 43, 43, 0);
+}
+
+keyboard table td.grisee:hover {
+    background-color: rgb(0, 0, 0);
+}
+
 button {
     margin-top: 10px;
 }

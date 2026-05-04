@@ -23,6 +23,7 @@ if(!isset($_SESSION['repartition_lettres'])) {
     }
 
     $_SESSION['repartition_lettres'] = $repartition;
+    
 }
 
 $repartition = $_SESSION['repartition_lettres'];

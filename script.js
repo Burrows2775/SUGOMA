@@ -45,6 +45,9 @@ function validerMot() {
                     caseCible.className = "jaune";
                     toucheVeriff.className = "jaune";
                 }
+                else if (statutPHP === "Invalide") {
+                    toucheVeriff.className = "grisee";
+                }
             }
 
             ligneEnCours++; 
