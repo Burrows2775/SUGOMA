@@ -43,7 +43,7 @@ function validerMot() {
             for (let i = 0; i < LONGUEUR_MOT; i++) {
                 
                 let caseCible = document.getElementById("case-" + ligneEnCours + "-" + i);
-                let statutPHP = donnees[i + 1]; 
+                let statutPHP = donnees[0][i+1]; 
 
                 let lettreCase = caseCible.innerText;
                 let toucheVeriff = document.getElementById("letter-" + lettreCase);
@@ -74,8 +74,7 @@ function validerMot() {
             } else {
                 const element = document.getElementById('errcard');
                 element.style.display = 'block';
-                element.innerText = 'C\'est PERDU !!!!!';
-                setTimeout(() => { element.style.display = 'none'; }, 5000);
+                element.innerText = 'Fin de la partie mon gourmand !!!!!!!! Le mot était ' + donnees[1] + '.';
             }
 
         })

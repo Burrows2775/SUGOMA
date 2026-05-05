@@ -4,29 +4,25 @@
 
 session_start(); 
 
+$alphabet = array('A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z');
+
 if (!isset($_SESSION['progression']['mot_secret'])) {
 
-    $fichierMots = fopen('mots.txt', "r");
+    $fichierMots = file('db/devinable/dico-' . $alphabet[random_int(0,20)] . '.txt');
+
     if ($fichierMots === false) {
         throw new RuntimeException('Impossible d\'ouvrir le fichier');
     }
 
-    $nbMot = random_int(1,167454);
-    $compteur = 0;
-
-    while (($line = fgets($fichierMots)) !== false && $compteur < $nbMot) {
-        $line = rtrim($line, "\n\r");
-        $compteur++;
-    }
+    $line = $fichierMots[random_int(0,(count($fichierMots) - 1))];
 
     $_SESSION['progression']['mot_secret'] = rtrim($line, "\n\r");
     $_SESSION['progression']['longueur_mot'] = strlen($_SESSION['progression']['mot_secret']);
-
-    fclose($fichierMots);
+    $_SESSION['progression']['essais'] = 0;
 
 }
 
-$nbrChances = 5;
+
 
 ?>
 
@@ -41,7 +37,7 @@ $nbrChances = 5;
 <body>
     <header>
         <p class="title">SUGOMA</p>
-        <p>LA COPIE DU SUTOM DE MATTEO</p>
+        <p>LA COPIE DU SUTOM DU sluac</p>
     </header>
 
     <button id="reset">Passer</button>

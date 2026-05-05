@@ -2,9 +2,7 @@
     <?php
         $motDuJour = $_SESSION['progression']['mot_secret'];
         $longueurMot = $_SESSION['progression']['longueur_mot'];;
-        global $nbrChances;
-
-        $file = file("mots.txt");
+        $nbrChances = 5;
 
         // Première ligne ----------------------------------------------------------
 

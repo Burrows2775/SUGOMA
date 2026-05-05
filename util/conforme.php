@@ -1,12 +1,5 @@
 <?php 
-    // Fichier qui convertis le dictionnaire des 300K mots en dictionnaire de mots exploitable pour le jeu
-
-    $fichierConvert = fopen('util/convert.txt', 'r');
-    $fichierFinal = fopen('util/conversion.txt', "w");
-
-    if ($fichierConvert === false || $fichierFinal === false) {
-        throw new RuntimeException('Impossible d\'ouvrir le fichier');
-    }
+    // Programme qui convertis le dictionnaire des 300K mots en dictionnaires de mots exploitable pour le jeu
 
     function removeAccents(string $str) {
         // Fonction qui retire les accents des mots
@@ -31,23 +24,42 @@
         return str_replace($accents, $replacements, $str);
     }
 
-    while (($line = fgets($fichierConvert)) !== false) {
-        $line = rtrim($line, "\n\r");
-        
-        // Mot accepté = possède entre 5 et 10 lettres
-        // Pas de tirets
+    /*
+    $cheminGrandeListe = 'util/devinables.txt';
+    $dossierDestination = 'db/devinable/'; 
+    */
 
-        if (strlen($line) <= 10 && strlen($line) >= 5 && !str_contains($line, '-')) {
+    $cheminGrandeListe = 'util/ndevinables.txt';
+    $dossierDestination = 'db/ndevinable/'; 
 
-            $copiePropre = strtoupper(removeAccents($line));
-            fwrite($fichierFinal, strtoupper($copiePropre));
-            fwrite($fichierFinal, "\n");
+    $fichierSource = fopen($cheminGrandeListe, 'r');
+
+    $fichiersOuverts = [];
+
+    if ($fichierSource) {
+        while (($ligne = fgets($fichierSource)) !== false) {
+
+            if (!str_contains($ligne, '-') && (strlen(trim($ligne)) >= 5 && strlen(trim($ligne)) <= 9)) {
+                $mot = strtoupper(removeAccents(trim($ligne)));
+                $motSplit = str_split($mot);
+                $premiereLettre = $motSplit[0];
+
+                if (!isset($fichiersOuverts[$premiereLettre])) {
+                    $fichiersOuverts[$premiereLettre] = fopen($dossierDestination . 'dico-' . $premiereLettre . '.txt', 'a');
+                }
+
+                fwrite($fichiersOuverts[$premiereLettre], $mot . PHP_EOL);
+            }
 
         }
-        
+
+        fclose($fichierSource);
+    } else {
+        echo "Erreur d'ouverture du fichier source.";
     }
 
-    fclose($fichierFinal);
-    fclose($fichierConvert);
+    foreach ($fichiersOuverts as $pointeurDeFichier) {
+        fclose($pointeurDeFichier);
+    }
 
 ?>
