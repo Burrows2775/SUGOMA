@@ -72,7 +72,10 @@ function validerMot() {
                 motEcrit = firstLetter; 
                 premiereCaseNouvelleLigne.innerText = firstLetter; 
             } else {
-                console.log("Fin du jeu !");
+                const element = document.getElementById('errcard');
+                element.style.display = 'block';
+                element.innerText = 'C\'est PERDU !!!!!';
+                setTimeout(() => { element.style.display = 'none'; }, 5000);
             }
 
         })
@@ -81,7 +84,10 @@ function validerMot() {
         });
 
     } else {
-        console.log("Le mot n'est pas complet !");
+            const element = document.getElementById('errcard');
+            element.style.display = 'block';
+            element.innerText = 'Le mot n\'est pas complet';
+            setTimeout(() => { element.style.display = 'none'; }, 5000);
     }
 
 }
@@ -114,13 +120,15 @@ const toutesLesTouches = document.querySelectorAll('keyboard table tr *');
 toutesLesTouches.forEach((touche) => {
     touche.addEventListener('click', (evenement) => {
 
+        const texteTouche = evenement.target.textContent.trim();
+
         if (evenement.target.textContent === '↺') {
             deleteLetter();
         }
         else if (evenement.target.textContent === '➔') {
             validerMot();
         }
-        else {
+        else if (texteTouche.match(/^[A-Z]$/)) {
             writeLetter(evenement.target.textContent);
         }
 
