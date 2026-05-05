@@ -27,26 +27,28 @@ if(!isset($_SESSION['progression']['repartition_lettres'])) {
 
 // Verif si le mot est bien existant (cheh noé) -----------------------
 
+$motEcritString = strtoupper(trim($_GET['motTape'])); 
+$motEcrit = str_split($motEcritString); // On garde ton tableau pour la suite du code
+$motSecret = str_split($_SESSION['progression']['mot_secret']);
+
+
 $fichierMots = fopen('mots.txt', "r");
 if ($fichierMots === false) {
     throw new RuntimeException('Impossible d\'ouvrir le fichier');
 }
 
-$compteur = 1;
+$motTrouve = false; 
 while (($line = fgets($fichierMots)) !== false) {
-
-    if (str_split(trim($line)) === $motEcrit) {
-        break;
+    if (strtoupper(trim($line)) === $motEcritString) {
+        $motTrouve = true;
+        break; 
     }
-    $compteur++;
 }
 
 fclose($fichierMots);
 
-if ($compteur >= 167455) {
-
+if (!$motTrouve) {
     echo json_encode('Nodico');
-
 } else {
 
     $repartition = $_SESSION['progression']['repartition_lettres'];

@@ -30,7 +30,14 @@ function validerMot() {
             console.log("Réponse du serveur :", donnees);
 
             if (donnees === "Nodico") {
+
+                const element = document.getElementById('errcard');
+                element.style.display = 'block';
+                element.innerText = 'Ce mot n\'existe pas mon gourmand';
+                setTimeout(() => { element.style.display = 'none'; }, 5000);
+
                 return 0;
+
             }
             
             for (let i = 0; i < LONGUEUR_MOT; i++) {
