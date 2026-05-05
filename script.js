@@ -28,6 +28,10 @@ function validerMot() {
         fetch('verif.php?motTape=' + motEcrit).then(reponse => reponse.json()).then(donnees => {
 
             console.log("Réponse du serveur :", donnees);
+
+            if (donnees === "Nodico") {
+                return 0;
+            }
             
             for (let i = 0; i < LONGUEUR_MOT; i++) {
                 
@@ -47,6 +51,9 @@ function validerMot() {
                 }
                 else if (statutPHP === "Invalide") {
                     toucheVeriff.className = "grisee";
+                }
+                else {
+                    // Le grand vide
                 }
             }
 

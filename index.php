@@ -1,15 +1,33 @@
 <?php
+
+// include 'util/conforme.php';
+
 session_start(); 
 
-if (!isset($_SESSION['mot_secret'])) {
-    $file = file("mots.txt");
-    $motDuJour = trim($file[random_int(0, count($file)-1)]);
-    $_SESSION['mot_secret'] = $motDuJour;
+if (!isset($_SESSION['progression']['mot_secret'])) {
+
+    $fichierMots = fopen('mots.txt', "r");
+    if ($fichierMots === false) {
+        throw new RuntimeException('Impossible d\'ouvrir le fichier');
+    }
+
+    $nbMot = random_int(1,167454);
+    $compteur = 0;
+
+    while (($line = fgets($fichierMots)) !== false && $compteur < $nbMot) {
+        $line = rtrim($line, "\n\r");
+        $compteur++;
+    }
+
+    $_SESSION['progression']['mot_secret'] = rtrim($line, "\n\r");
+    $_SESSION['progression']['longueur_mot'] = strlen($_SESSION['progression']['mot_secret']);
+
+    fclose($fichierMots);
+
 }
 
-$motDuJour = $_SESSION['mot_secret'];
-$longueurMot = strlen($motDuJour);
 $nbrChances = 5;
+
 ?>
 
 <!DOCTYPE html>
@@ -28,12 +46,13 @@ $nbrChances = 5;
 
     <button id="reset">Passer</button>
     
+    <?php include 'error.php'; ?>
     <?php include 'tableau.php'; ?>
     <?php include 'keyboard.php'; ?>
 
     <script>
         const LONGUEUR_MOT = <?php echo $longueurMot; ?>;
-        let firstLetter = <?php echo "'" . str_split(trim($motDuJour))[0] . "'"; ?>;
+        let firstLetter = <?php echo "'" . str_split(trim($_SESSION['progression']['mot_secret']))[0] . "'"; ?>;
     </script>
     <script src="script.js"></script>
 

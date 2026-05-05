@@ -55,6 +55,7 @@ table td.rouge {
 keyboard table {
     border-collapse: separate;
     margin-top: 60px;
+    margin-bottom: 100px;
     border-spacing: 5px;
     border-color: rgba(255, 255, 255, 0);
 }
@@ -102,4 +103,11 @@ keyboard table td.grisee:hover {
 
 button {
     margin-top: 10px;
+}
+
+.errcard {
+    margin-top: 30px;
+    background-color: rgb(255, 108, 108);
+    padding: 10px;
+    border-radius: 10px;
 }
