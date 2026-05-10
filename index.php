@@ -4,7 +4,7 @@
 
 session_start(); 
 
-$alphabet = array('A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z');
+$alphabet = array('A','B','C','D','E','F','G','H','I','J','L','M','N','O','P','Q','R','S','T','U','V');
 
 if (!isset($_SESSION['progression']['mot_secret'])) {
 
@@ -18,7 +18,7 @@ if (!isset($_SESSION['progression']['mot_secret'])) {
 
     $_SESSION['progression']['mot_secret'] = rtrim($line, "\n\r");
     $_SESSION['progression']['longueur_mot'] = strlen($_SESSION['progression']['mot_secret']);
-    $_SESSION['progression']['essais'] = 0;
+    $_SESSION['progression']['nbEssais'] = 0;
 
 }
 
@@ -32,7 +32,7 @@ if (!isset($_SESSION['progression']['mot_secret'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SUGOMA</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="styles/style.css">
 </head>
 <body>
     <header>
@@ -42,14 +42,15 @@ if (!isset($_SESSION['progression']['mot_secret'])) {
 
     <button id="reset">Passer</button>
     
-    <?php include 'error.php'; ?>
-    <?php include 'tableau.php'; ?>
-    <?php include 'keyboard.php'; ?>
+    <?php include 'include/error.php'; ?>
+    <?php include 'include/tableau.php'; ?>
+    <?php include 'include/keyboard.php'; ?>
 
     <script>
         const LONGUEUR_MOT = <?php echo $longueurMot; ?>;
         let firstLetter = <?php echo "'" . str_split(trim($_SESSION['progression']['mot_secret']))[0] . "'"; ?>;
+        let sauvegarde = <?php if (isset($_SESSION['progression']['sauvegarde'])) {echo 1;} else {echo 0;} ?>;
     </script>
-    <script src="script.js"></script>
+    <script src="scripts/script.js"></script>
 
 </body>

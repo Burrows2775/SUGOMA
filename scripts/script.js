@@ -2,6 +2,39 @@ let ligneEnCours = 0;
 let caseEnCours = 1; 
 let motEcrit = firstLetter;
 
+if (sauvegarde) {
+
+    fetch('../include/sauvegarde.php')
+        .then(reponse => reponse.json())
+        .then(donnees => {
+
+        donnees.forEach((tableau) => {
+            tableau.forEach((valeur) => {
+                let tab = valeur.split(";");
+
+                let caseCible = document.getElementById("case-" + ligneEnCours + "-" + tab[1]);
+                
+                caseCible.innerText = tab[0];
+
+                if (tab[2] == "V") { caseCible.className = "rouge"; }
+                else if (tab[2] == "P") { caseCible.className = "jaune"; }
+                else { caseCible.className == "bleu"; }
+
+            });
+            ligneEnCours++;
+        });
+
+        let ddd = document.getElementById("case-" + ligneEnCours + "-0");
+        ddd.innerText = firstLetter;
+
+    })
+
+    .catch(erreur => {
+        console.error("Erreur Fetch :", erreur);
+    });
+
+}
+
 function writeLetter(letter) {
     if (caseEnCours < LONGUEUR_MOT) {
         let caseCible = document.getElementById("case-" + ligneEnCours + "-" + caseEnCours);
@@ -24,16 +57,19 @@ function validerMot() {
 
     if (caseEnCours === LONGUEUR_MOT) {
         
-        console.log("Envoi PHP :", motEcrit);
-        fetch('verif.php?motTape=' + motEcrit).then(reponse => reponse.json()).then(donnees => {
+        console.log("Envoi :", motEcrit);
 
-            console.log("Réponse du serveur :", donnees);
+        fetch('../include/verif.php?motTape=' + motEcrit)
+            .then(reponse => reponse.json())
+            .then(donnees => {
+
+            console.log("Réponse : ", donnees);
 
             if (donnees === "Nodico") {
 
                 const element = document.getElementById('errcard');
                 element.style.display = 'block';
-                element.innerText = 'Ce mot n\'existe pas mon gourmand';
+                element.innerText = 'Ce mot n\'est point dans le dictionnaire';
                 setTimeout(() => { element.style.display = 'none'; }, 5000);
 
                 return 0;
@@ -48,19 +84,16 @@ function validerMot() {
                 let lettreCase = caseCible.innerText;
                 let toucheVeriff = document.getElementById("letter-" + lettreCase);
                 
-                if (statutPHP === "Valide") {
+                if (statutPHP === "V") {
                     caseCible.className = "rouge";
                     toucheVeriff.className = "rouge";
                 } 
-                else if (statutPHP === "Presente") {
+                else if (statutPHP === "P") {
                     caseCible.className = "jaune";
                     toucheVeriff.className = "jaune";
                 }
-                else if (statutPHP === "Invalide") {
-                    toucheVeriff.className = "grisee";
-                }
                 else {
-                    // Le grand vide
+                    toucheVeriff.className = "grisee";
                 }
             }
 
@@ -74,7 +107,7 @@ function validerMot() {
             } else {
                 const element = document.getElementById('errcard');
                 element.style.display = 'block';
-                element.innerText = 'Fin de la partie mon gourmand !!!!!!!! Le mot était ' + donnees[1] + '.';
+                element.innerText = 'Fin de la partie !!!!!!!! Le mot était ' + donnees[1] + '.';
             }
 
         })
@@ -139,6 +172,6 @@ toutesLesTouches.forEach((touche) => {
 let btnReset = document.getElementById("reset");
 btnReset.addEventListener('click', (evenement) => {
 
-    window.location.replace("reset.php");
+    window.location.replace("include/reset.php");
 
 });

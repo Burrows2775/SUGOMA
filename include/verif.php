@@ -30,7 +30,7 @@ if(!isset($_SESSION['progression']['repartition_lettres'])) {
 $motEcritString = strtoupper(trim($_GET['motTape'])); 
 $motEcrit = str_split($motEcritString);
 
-$fichierMots = fopen('db/ndevinable/dico-' . str_split($_GET['motTape'])[0] . '.txt', "r");
+$fichierMots = fopen('../db/ndevinable/dico-' . str_split($_GET['motTape'])[0] . '.txt', "r");
 if ($fichierMots === false) { throw new RuntimeException('Impossible d\'ouvrir le fichier'); }
 
 $motTrouve = false; 
@@ -49,18 +49,24 @@ if (!$motTrouve) {
 
 } else {
 
-    $_SESSION['progression']['essais']++;
+    $_SESSION['progression']['nbEssais']++;
     $repartition = $_SESSION['progression']['repartition_lettres'];
-    $resultat = array();
-    $compteur = 0;
     $casesValides = array();
+    $resultat = array();
+
+    $sauvegardeLigne = array();
+
+    $compteur = 0;
+
 
     // Verif lettres valides (cases rouges)
     foreach($motEcrit as $lettreMotEcrit) {
         if ($lettreMotEcrit == $motSecret[$compteur]) {
-            $resultat += [$compteur+1 => "Valide"];
+            $resultat += [$compteur+1 => "V"];
             array_push($casesValides, $compteur);
             $repartition[$lettreMotEcrit]--;
+
+            array_push($sauvegardeLigne, $lettreMotEcrit . ";" . $compteur . ";V");
         }
         $compteur++;
     }
@@ -72,22 +78,33 @@ if (!$motTrouve) {
         if(!in_array($compteur, $casesValides)) {
             if ($repartition[$lettreMotEcrit] >= 1) {
                 // Lettres jaunes
-                $resultat += [$compteur+1 => "Presente"];
+                $resultat += [$compteur+1 => "P"];
                 $repartition[$lettreMotEcrit]--;
+
+                array_push($sauvegardeLigne, $lettreMotEcrit . ";" . $compteur . ";P");
             }
             else {
                 // Lettres bleues
-                $resultat += [$compteur+1 => "Invalide"];
+                $resultat += [$compteur+1 => "I"];
+
+                array_push($sauvegardeLigne, $lettreMotEcrit . ";" . $compteur . ";I");
             }
         }
         $compteur++;
     }
 
-    if ($_SESSION['progression']['essais'] >= 6) {
+    
+    if (!isset($_SESSION['progression']['sauvegarde'])) {
+        $_SESSION['progression']['sauvegarde'] = array();
+    }
+    array_push($_SESSION['progression']['sauvegarde'], $sauvegardeLigne);
+    
+
+    if ($_SESSION['progression']['nbEssais'] >= 6) {
         echo json_encode(array($resultat,$_SESSION['progression']['mot_secret']));
     }
     else {
-        echo json_encode(array($resultat,'//'));
+        echo json_encode(array($resultat));
     }
 
 }
