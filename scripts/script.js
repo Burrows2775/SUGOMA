@@ -3,6 +3,7 @@ let caseEnCours = 1;
 let motEcrit = firstLetter;
 
 let motTrouve = false;
+const COLOR_DELAY = 300; // délai en ms entre le coloriage des cases
 
 if (sauvegarde) {
 
@@ -77,7 +78,7 @@ function validerMot() {
 
         fetch('../include/verif.php?motTape=' + motEcrit)
             .then(reponse => reponse.json())
-            .then(donnees => {
+            .then(async donnees => {
 
             console.log("Réponse : ", donnees);
 
@@ -93,7 +94,8 @@ function validerMot() {
             }
             
             for (let i = 0; i < LONGUEUR_MOT; i++) {
-                
+                if (i > 0) await new Promise(r => setTimeout(r, COLOR_DELAY));
+
                 let caseCible = document.getElementById("case-" + ligneEnCours + "-" + i);
                 let statutPHP = donnees[0][i+1]; 
 

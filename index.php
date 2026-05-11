@@ -37,7 +37,7 @@ if (!isset($_SESSION['progression']['mot_secret'])) {
 <body>
     <header>
         <p class="title">SUGOMA</p>
-        <p>LA COPIE DU SUTOM DU sluac</p>
+        <p>Mo, mo, Motus !!!</p>
     </header>
 
     <button id="reset">Passer</button>
