@@ -46,7 +46,7 @@ if (!isset($_SESSION['progression']['mot_secret'])) {
     <?php include 'include/tableau.php'; ?>
     <?php include 'include/keyboard.php'; ?>
 
-    <?php echo $_SESSION['progression']['mot_secret'] ?>
+    <?php // echo $_SESSION['progression']['mot_secret'] ?>
 
     <script>
         const LONGUEUR_MOT = <?php echo $longueurMot; ?>;
