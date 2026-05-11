@@ -2,30 +2,45 @@ let ligneEnCours = 0;
 let caseEnCours = 1; 
 let motEcrit = firstLetter;
 
+let motTrouve = false;
+
 if (sauvegarde) {
 
     fetch('../include/sauvegarde.php')
         .then(reponse => reponse.json())
         .then(donnees => {
 
+        let compteurLetVal = 0;
+
         donnees.forEach((tableau) => {
             tableau.forEach((valeur) => {
                 let tab = valeur.split(";");
-
                 let caseCible = document.getElementById("case-" + ligneEnCours + "-" + tab[1]);
-                
                 caseCible.innerText = tab[0];
 
-                if (tab[2] == "V") { caseCible.className = "rouge"; }
+                if (tab[2] == "V") { 
+                    caseCible.className = "rouge"; 
+                    compteurLetVal++;
+                }
                 else if (tab[2] == "P") { caseCible.className = "jaune"; }
                 else { caseCible.className == "bleu"; }
 
             });
             ligneEnCours++;
+
+            if (compteurLetVal == LONGUEUR_MOT) {
+                motTrouve = true;
+                console.log(motTrouve);
+            }
+
+            compteurLetVal = 0;
+
         });
 
-        let ddd = document.getElementById("case-" + ligneEnCours + "-0");
-        ddd.innerText = firstLetter;
+        if (!motTrouve) {
+            let ddd = document.getElementById("case-" + ligneEnCours + "-0");
+            ddd.innerText = firstLetter;
+        }
 
     })
 
@@ -36,7 +51,7 @@ if (sauvegarde) {
 }
 
 function writeLetter(letter) {
-    if (caseEnCours < LONGUEUR_MOT) {
+    if (caseEnCours < LONGUEUR_MOT && !motTrouve) {
         let caseCible = document.getElementById("case-" + ligneEnCours + "-" + caseEnCours);
         caseCible.innerText = letter;
         caseEnCours++;
@@ -45,7 +60,7 @@ function writeLetter(letter) {
 }
 
 function deleteLetter() {
-    if (caseEnCours > 1) { 
+    if (caseEnCours > 1 && !motTrouve) { 
         caseEnCours--;
         let caseCible = document.getElementById("case-" + ligneEnCours + "-" + caseEnCours);
         caseCible.innerText = "";
@@ -58,6 +73,7 @@ function validerMot() {
     if (caseEnCours === LONGUEUR_MOT) {
         
         console.log("Envoi :", motEcrit);
+        $compteurLetVal = 0;
 
         fetch('../include/verif.php?motTape=' + motEcrit)
             .then(reponse => reponse.json())
@@ -87,6 +103,8 @@ function validerMot() {
                 if (statutPHP === "V") {
                     caseCible.className = "rouge";
                     toucheVeriff.className = "rouge";
+
+                    $compteurLetVal++;
                 } 
                 else if (statutPHP === "P") {
                     caseCible.className = "jaune";
@@ -95,11 +113,21 @@ function validerMot() {
                 else {
                     toucheVeriff.className = "grisee";
                 }
+
+            }
+
+            if ($compteurLetVal == LONGUEUR_MOT) {
+                const element = document.getElementById('errcard');
+                element.style.display = 'block';
+                element.innerText = 'C\'est gagné !!!';
+
+                return 0;
             }
 
             ligneEnCours++; 
             let premiereCaseNouvelleLigne = document.getElementById("case-" + ligneEnCours + "-0");
             
+
             if (premiereCaseNouvelleLigne) {
                 caseEnCours = 1; 
                 motEcrit = firstLetter; 
